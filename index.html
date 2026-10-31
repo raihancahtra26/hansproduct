@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Han's Products - Workspace</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* === MODERN SAAS DESIGN SYSTEM === */
+        :root {
+            --primary: #2563EB;      
+            --primary-hover: #1D4ED8;
+            --danger: #EF4444;       
+            --warning: #F59E0B;      
+            --success: #10B981;      
+            
+            --bg-base: #F8FAFC; 
+            --bg-mesh: radial-gradient(at 0% 0%, hsla(217,100%,92%,1) 0px, transparent 50%),
+                       radial-gradient(at 100% 100%, hsla(204,100%,92%,1) 0px, transparent 50%);
+            --surface: rgba(255, 255, 255, 0.9);
+            --surface-solid: #FFFFFF;
+            --border: rgba(226, 232, 240, 0.8);
+            
+            --text-main: #0F172A; 
+            --text-muted: #64748B;
+            --input-bg: #F1F5F9;
+            --input-border: #E2E8F0;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-base: #0F172A;
+            --bg-mesh: radial-gradient(at 0% 0%, hsla(217,100%,15%,1) 0px, transparent 50%),
+                       radial-gradient(at 100% 100%, hsla(204,100%,10%,1) 0px, transparent 50%);
+            --surface: rgba(30, 41, 59, 0.85);
+            --surface-solid: #1E293B;
+            --border: rgba(51, 65, 85, 0.8);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --input-bg: #0F172A;
+            --input-border: #334155;
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-base); background-image: var(--bg-mesh); background-attachment: fixed; color: var(--text-main); overflow: hidden; height: 100vh; display: flex; transition: background-color 0.4s ease; }
+        button, input, select, textarea { outline: none; border: none; background: none; font-family: inherit; color: inherit; }
+        .hidden { display: none !important; }
+
+        /* LAYOUT */
+        .sidebar { width: 260px; padding: 24px; display: flex; flex-direction: column; background: var(--surface); border-right: 1px solid var(--border); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 10; }
+        .main-content { flex-grow: 1; padding: 32px 40px; overflow-y: auto; position: relative; scroll-behavior: smooth; }
+
+        /* SIDEBAR */
+        .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+        .brand-icon { color: var(--primary); }
+        .brand h2 { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.01em; }
+        .nav-menu { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
+        .nav-item { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: var(--radius-sm); color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: var(--transition); cursor: pointer;}
+        .nav-item:hover { background: var(--border); color: var(--text-main); }
+        .nav-item.active { background: var(--primary); color: white; box-shadow: var(--shadow-md); }
+        .user-profile { display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--surface-solid); border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm); margin-top: auto; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 600; color: white; font-size: 0.9rem; }
+        .user-info h4 { font-size: 0.85rem; margin-bottom: 2px; }
+        .user-info p { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* TOPBAR & FILTER */
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; gap: 20px; }
+        .search-box { display: flex; align-items: center; gap: 12px; background: var(--surface-solid); border: 1px solid var(--border); padding: 12px 20px; border-radius: 99px; flex-grow: 1; max-width: 500px; transition: var(--transition); box-shadow: var(--shadow-sm); }
+        .search-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .search-box input { flex-grow: 1; font-size: 0.95rem; }
+        
+        .btn { padding: 10px 20px; border-radius: 99px; cursor: pointer; font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: var(--transition); border: 1px solid transparent; justify-content: center;}
+        .btn-primary { background: var(--primary); color: white; box-shadow: var(--shadow-sm); }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .btn-secondary { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); }
+
+        .filters { display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .filters::-webkit-scrollbar { display: none; }
+        .chip { padding: 8px 16px; border-radius: 99px; background: var(--surface-solid); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: var(--transition); font-weight: 500; font-size: 0.85rem; box-shadow: var(--shadow-sm); }
+        .chip:hover { border-color: var(--text-muted); color: var(--text-main); }
+        .chip.active { background: var(--text-main); color: var(--surface-solid); border-color: var(--text-main); }
+
+        /* GRID & CARDS */
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; padding-bottom: 40px; }
+        .card { background: var(--surface-solid); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; transition: var(--transition); box-shadow: var(--shadow-sm); position: relative; }
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: rgba(37, 99, 235, 0.2); }
+        .card-img-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: var(--input-bg); overflow: hidden; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .card:hover .card-img { transform: scale(1.03); }
+        
+        .card-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 6px; opacity: 0; transform: translateY(-8px); transition: var(--transition); }
+        .card:hover .card-actions { opacity: 1; transform: translateY(0); }
+        
+        .icon-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--surface-solid); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+        .icon-btn i { width: 16px; height: 16px; }
+        .icon-btn:hover { transform: scale(1.1); color: var(--primary); border-color: var(--primary); }
+        .icon-btn.fav:hover, .icon-btn.fav.active { color: var(--warning); border-color: var(--warning); }
+        .icon-btn.danger:hover { color: var(--danger); border-color: var(--danger); }
+
+        .card-body { padding: 16px 20px; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-title { font-size: 1.05rem; font-weight: 600; line-height: 1.4; margin-bottom: 6px; display: flex; justify-content: space-between; gap: 8px; }
+        .card-title .star-badge { color: var(--warning); fill: var(--warning); flex-shrink: 0; width: 18px; height: 18px; }
+        .card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex-grow: 1; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--input-border); }
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); }
+        .date { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+
+        /* MODALS & FORMS */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: var(--transition); }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+        .modal-content { width: 100%; max-width: 500px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-lg); transform: scale(0.95) translateY(10px); transition: var(--transition); box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+        .modal-overlay.open .modal-content { transform: scale(1) translateY(0); }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--surface-solid); }
+        .modal-body { padding: 24px; overflow-y: auto; flex-grow: 1; }
+        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; background: var(--surface-solid); }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-main); margin-bottom: 8px; font-weight: 500;}
+        .form-control { width: 100%; padding: 12px 16px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: var(--radius-md); font-size: 0.9rem; transition: var(--transition); color: var(--text-main); }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); background: var(--surface-solid); }
+        
+        .image-dropzone { border: 2px dashed var(--input-border); border-radius: var(--radius-md); height: 160px; display: flex; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; transition: var(--transition); background: var(--input-bg); position: relative; overflow: hidden; }
+        .image-dropzone:hover { border-color: var(--primary); background: rgba(37, 99, 235, 0.05); }
+        .image-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
+
+        .toggle-wrap { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--input-border); transition: .3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgb(0 0 0 / 0.1); }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .toast { position: fixed; bottom: 32px; right: 32px; padding: 14px 24px; background: var(--text-main); color: var(--bg-base); border-radius: var(--radius-md); display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-lg); font-weight: 500; font-size: 0.9rem; z-index: 1000; transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        
+        .empty-state { text-align: center; padding: 80px 20px; grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); }
+        .empty-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--input-bg); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    </style>
+</head>
+<body data-theme="light"> 
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i data-lucide="hexagon" class="brand-icon"></i>
+            <h2>Han's Products</h2>
+        </div>
+        <nav class="nav-menu">
+            <a class="nav-item active" data-nav="all"><i data-lucide="layout-grid"></i> Dashboard</a>
+            <a class="nav-item" data-nav="favorites"><i data-lucide="star"></i> Favorit</a>
+            <hr style="border-top: 1px solid var(--border); margin: 16px 0;">
+            <a class="nav-item" id="btnOpenSettings"><i data-lucide="settings"></i> System & Data</a>
+        </nav>
+        <div class="user-profile">
+            <div class="avatar">R</div>
+            <div class="user-info">
+                <h4>Raihan</h4>
+                <p>Direktur Utama</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="topbar">
+            <div class="search-box">
+                <i data-lucide="search" style="color: var(--text-muted); width: 20px;"></i>
+                <input type="text" id="searchInput" placeholder="Cari konten, produk, atau dokumen...">
+            </div>
+            <button class="btn btn-primary" id="btnAddNew"><i data-lucide="plus" style="width: 18px;"></i> Tambah Konten</button>
+        </header>
+
+        <div class="filters" id="categoryContainer"></div>
+        <div class="content-grid" id="contentGrid"></div>
+    </main>
+
+    <!-- Modal Form (Anti Blokir Google Sites) -->
+    <div class="modal-overlay" id="modalForm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Konten</h3>
+                <button class="icon-btn" id="btnCloseForm" style="border:none; box-shadow:none; background: transparent;"><i data-lucide="x"></i></button>
+            </div>
+            
+            <div class="modal-body">
+                <input type="hidden" id="docId">
+                
+                <div class="form-group">
+                    <label>Gambar / Cover</label>
+                    <div class="image-dropzone" id="dropArea">
+                        <input type="file" id="fileInput" accept="image/*" hidden>
+                        <div style="color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.85rem;">
+                            <i data-lucide="image-plus" style="width: 28px; height: 28px;"></i>
+                            <span>Klik untuk upload gambar</span>
+                        </div>
+                        <img id="imagePreview" class="image-preview hidden" src="" alt="">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Judul Konten <span style="color:var(--danger)">*</span></label>
+                    <input type="text" class="form-control" id="inputTitle" placeholder="Contoh: Strategi Marketing Q4">
+                </div>
+                
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select class="form-control" id="inputCategory"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tautan URL (Opsional)</label>
+                    <input type="url" class="form-control" id="inputUrl" placeholder="https://...">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Deskripsi Singkat <span style="color:var(--danger)">*</span></label>
+                    <textarea class="form-control" id="inputDesc" placeholder="Tuliskan deskripsi konten ini..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnCancelForm">Batal</button>
+                <button class="btn btn-primary" id="btnSaveForm">Simpan Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Settings & Export/Import -->
+    <div class="modal-overlay" id="modalSettings">
+        <div class="modal-content" style="max-width: 420px;">
+            <div class="modal-header">
+                <h3>Sistem & Manajemen Data</h3>
+                <button class="icon-btn" id="btnCloseSettings" style="border:none; box-shadow:none; background: transparent;"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body" style="padding-top: 10px;">
+                <div class="toggle-wrap" style="border-bottom: 1px solid var(--border);">
+                    <div>
+                        <h4 style="font-size: 0.95rem; margin-bottom: 4px;">Tema Gelap (Dark Mode)</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Ubah tampilan ke mode gelap</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div style="margin-top: 24px;">
+                    <h4 style="font-size: 0.95rem; margin-bottom: 8px; color: var(--text-main);">Data Backup (Export / Import)</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
+                        Karena ini berjalan di Google Sites, data bersifat sementara. Gunakan tombol <b>Import JSON</b> untuk memuat file, dan <b>Export JSON</b> untuk mem-backup data terbaru Anda.
+                    </p>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" id="btnImportTrigger" style="flex: 1; padding: 10px; font-size: 0.85rem;"><i data-lucide="upload" style="width: 16px;"></i> Import JSON</button>
+                        <button class="btn btn-primary" id="btnExport" style="flex: 1; padding: 10px; font-size: 0.85rem;"><i data-lucide="download" style="width: 16px;"></i> Export JSON</button>
+                        
+                        <!-- Hidden File Input for Import -->
+                        <input type="file" id="fileImport" accept=".json" hidden>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i data-lucide="check-circle" style="color: var(--success);"></i>
+        <span id="toastMsg">Sukses</span>
+    </div>
+
+    <!-- =========================================================================
+         AREA DATABASE UTAMA (OPSIONAL: Untuk data bawaan permanen yang tidak hilang saat refresh)
+         ========================================================================= -->
+    <script>
+        const MASTER_DATA = [
+            
+        ];
+    </script>
+    <!-- ========================================================================= -->
+
+    <!-- MAIN SCRIPT -->
+    <script>
+        const CATEGORIES = ["AI", "Mathematics", "Prudential Konvensional", "Prudential Syariah", "Nongkrong Academy", "Property Advisor", "Generation Academy", "Psychology"];
+        
+        let sessionData = [...MASTER_DATA];
+        let activeNav = "all";
+        let activeCategory = "Semua";
+
+        const grid = document.getElementById('contentGrid');
+        const modalForm = document.getElementById('modalForm');
+
+        lucide.createIcons();
+        buildCategories();
+        setupEvents();
+        setupSettingsAndData();
+        renderData();
+
+        function buildCategories() {
+            const container = document.getElementById('categoryContainer');
+            const select = document.getElementById('inputCategory');
+            container.innerHTML = `<button class="chip active" data-cat="Semua">Semua Kategori</button>`;
+            
+            CATEGORIES.forEach(cat => {
+                container.innerHTML += `<button class="chip" data-cat="${cat}">${cat}</button>`;
+                select.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+
+            container.addEventListener('click', (e) => {
+                if(e.target.classList.contains('chip')) {
+                    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                    e.target.classList.add('active');
+                    activeCategory = e.target.dataset.cat;
+                    renderData();
+                }
+            });
+        }
+
+        function renderData(searchQuery = "") {
+            grid.innerHTML = '';
+            
+            const filteredData = sessionData.filter(item => {
+                let navMatch = true;
+                if(activeNav === 'favorites') navMatch = item.isFavorite;
+
+                let catMatch = activeCategory === "Semua" || item.category === activeCategory;
+                let searchMatch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return navMatch && catMatch && searchMatch;
+            });
+
+            if (filteredData.length === 0) {
+                let icon = "inbox", title = "Tidak ada konten", desc = "Klik tombol 'Tambah Konten' atau 'Import JSON'.";
+                if(activeNav === 'favorites') { icon = "star"; title = "Belum ada Favorit"; desc = "Klik ikon bintang pada kartu."; }
+                grid.innerHTML = `<div class="empty-state"><div class="empty-icon"><i data-lucide="${icon}" style="width: 32px; height: 32px; color: var(--text-muted);"></i></div><h3>${title}</h3><p>${desc}</p></div>`;
+                lucide.createIcons(); return;
+            }
+
+            // Urutkan dari yang terbaru
+            filteredData.sort((a, b) => b.timestamp - a.timestamp).forEach(item => {
+                const thumb = item.thumbnail || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop';
+                const starIcon = item.isFavorite ? `<i data-lucide="star" class="star-badge"></i>` : '';
+                
+                const actions = `
+                    <button class="icon-btn fav ${item.isFavorite ? 'active' : ''}" data-action="toggleFav" data-id="${item.id}" title="Favorit"><i data-lucide="star" ${item.isFavorite ? 'style="fill: currentColor;"' : ''}></i></button>
+                    <button class="icon-btn edit" data-action="edit" data-id="${item.id}" title="Edit"><i data-lucide="edit-2"></i></button>
+                    <button class="icon-btn danger" data-action="hardDelete" data-id="${item.id}" title="Hapus"><i data-lucide="trash-2"></i></button>
+                    ${item.url ? `<a href="${item.url}" target="_blank" class="icon-btn" title="Kunjungi URL"><i data-lucide="external-link"></i></a>` : ''}
+                `;
+
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="card-img-wrap"><img src="${thumb}" class="card-img" alt="Cover"><div class="card-actions">${actions}</div></div>
+                        <div class="card-body">
+                            <h3 class="card-title"><span>${item.title}</span> ${starIcon}</h3>
+                            <p class="card-desc">${item.description}</p>
+                            <div class="card-footer">
+                                <span class="badge">${item.category}</span>
+                                <span class="date">${item.dateFormatted || 'Baru'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        // ==========================
+        // AKSI CRUD 
+        // ==========================
+        grid.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.icon-btn');
+            if (!btn) return;
+            
+            const action = btn.dataset.action; 
+            const id = btn.dataset.id;
+            const itemIdx = sessionData.findIndex(x => x.id == id);
+            
+            if (itemIdx === -1) return;
+
+            if (action === 'toggleFav') {
+                sessionData[itemIdx].isFavorite = !sessionData[itemIdx].isFavorite;
+                renderData();
+                showToast(sessionData[itemIdx].isFavorite ? "Ditambah ke Favorit" : "Dihapus dari Favorit");
+            }
+            if (action === 'edit') {
+                const data = sessionData[itemIdx];
+                document.getElementById('modalTitle').innerText = "Edit Konten";
+                document.getElementById('docId').value = data.id;
+                document.getElementById('inputTitle').value = data.title;
+                document.getElementById('inputDesc').value = data.description;
+                document.getElementById('inputCategory').value = data.category;
+                document.getElementById('inputUrl').value = data.url;
+                
+                const preview = document.getElementById('imagePreview');
+                if (data.thumbnail) { 
+                    preview.src = data.thumbnail; 
+                    preview.classList.remove('hidden'); 
+                } else { 
+                    preview.classList.add('hidden'); 
+                }
+                modalForm.classList.add('open');
+            }
+            if (action === 'hardDelete') {
+                sessionData.splice(itemIdx, 1); 
+                renderData(); 
+                showToast("Data Dihapus", "error");
+            }
+        });
+
+        // ==========================
+        // PENYIMPANAN BARU
+        // ==========================
+        document.getElementById('btnSaveForm').addEventListener('click', () => {
+            const titleVal = document.getElementById('inputTitle').value.trim();
+            const descVal = document.getElementById('inputDesc').value.trim();
+            
+            if(!titleVal || !descVal) {
+                showToast("Judul dan Deskripsi wajib diisi!", "error");
+                return;
+            }
+
+            const id = document.getElementById('docId').value;
+            const preview = document.getElementById('imagePreview');
+            let thumb = '';
+            
+            if(!preview.classList.contains('hidden')) {
+                thumb = preview.src;
+            }
+
+            const payload = {
+                title: titleVal,
+                description: descVal,
+                category: document.getElementById('inputCategory').value,
+                url: document.getElementById('inputUrl').value,
+                thumbnail: thumb
+            };
+
+            if (id) {
+                const idx = sessionData.findIndex(x => x.id == id);
+                payload.id = id;
+                payload.timestamp = sessionData[idx].timestamp;
+                payload.dateFormatted = sessionData[idx].dateFormatted;
+                payload.isFavorite = sessionData[idx].isFavorite;
+                sessionData[idx] = payload;
+                showToast("Berhasil diperbarui");
+            } else {
+                payload.id = Date.now().toString();
+                payload.timestamp = Date.now();
+                payload.dateFormatted = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
+                payload.isFavorite = false;
+                sessionData.push(payload);
+                showToast("Berhasil ditambahkan");
+            }
+            
+            modalForm.classList.remove('open');
+            renderData();
+        });
+
+        // ==========================
+        // EVENTS UMUM
+        // ==========================
+        function setupEvents() {
+            document.querySelectorAll('.nav-item:not(#btnOpenSettings)').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    document.querySelectorAll('.nav-item:not(#btnOpenSettings)').forEach(n => n.classList.remove('active'));
+                    e.currentTarget.classList.add('active'); activeNav = e.currentTarget.dataset.nav; 
+                    document.getElementById('searchInput').value = ''; renderData();
+                });
+            });
+
+            document.getElementById('searchInput').addEventListener('input', (e) => renderData(e.target.value));
+            
+            document.getElementById('btnAddNew').addEventListener('click', () => {
+                document.getElementById('docId').value = '';
+                document.getElementById('inputTitle').value = '';
+                document.getElementById('inputDesc').value = '';
+                document.getElementById('inputUrl').value = '';
+                document.getElementById('modalTitle').innerText = "Konten Baru";
+                document.getElementById('imagePreview').classList.add('hidden'); 
+                document.getElementById('imagePreview').src = '';
+                modalForm.classList.add('open');
+            });
+            
+            document.getElementById('btnCloseForm').addEventListener('click', () => modalForm.classList.remove('open'));
+            document.getElementById('btnCancelForm').addEventListener('click', () => modalForm.classList.remove('open'));
+
+            const fileInput = document.getElementById('fileInput');
+            document.getElementById('dropArea').addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0]; if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const img = new Image(); img.src = ev.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 500;
+                        const scale = img.width > MAX_WIDTH ? MAX_WIDTH / img.width : 1;
+                        canvas.width = img.width * scale; canvas.height = img.height * scale;
+                        const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        document.getElementById('imagePreview').src = canvas.toDataURL('image/webp', 0.6);
+                        document.getElementById('imagePreview').classList.remove('hidden');
+                    };
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ==========================
+        // PENGATURAN EXPORT / IMPORT (100% BEBAS BUG)
+        // ==========================
+        function setupSettingsAndData() {
+            document.getElementById('themeToggle').addEventListener('change', (e) => {
+                const newTheme = e.target.checked ? 'dark' : 'light';
+                document.body.setAttribute('data-theme', newTheme); 
+            });
+
+            const modalSettings = document.getElementById('modalSettings');
+            document.getElementById('btnOpenSettings').addEventListener('click', () => modalSettings.classList.add('open'));
+            document.getElementById('btnCloseSettings').addEventListener('click', () => modalSettings.classList.remove('open'));
+
+            // LOGIKA EXPORT
+            document.getElementById('btnExport').addEventListener('click', () => {
+                if(sessionData.length === 0) {
+                    showToast("Tidak ada data untuk diexport", "error");
+                    return;
+                }
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sessionData));
+                const dlAnchorElem = document.createElement('a');
+                dlAnchorElem.setAttribute("href", dataStr);
+                dlAnchorElem.setAttribute("download", "Data_HansProducts.json");
+                dlAnchorElem.click();
+                showToast("Berhasil mendownload JSON");
+            });
+
+            // LOGIKA IMPORT
+            const fileImportInput = document.getElementById('fileImport');
+            document.getElementById('btnImportTrigger').addEventListener('click', () => {
+                fileImportInput.click();
+            });
+
+            fileImportInput.addEventListener('change', (e) => {
+                const file = e.target.files[0]; 
+                if(!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const importedData = JSON.parse(ev.target.result);
+                        if(Array.isArray(importedData)) {
+                            // Menggabungkan data import dengan data master yang mungkin ada
+                            sessionData = importedData;
+                            renderData();
+                            showToast("JSON berhasil di-import!");
+                            modalSettings.classList.remove('open');
+                        } else { 
+                            showToast("Format JSON tidak valid!", "error"); 
+                        }
+                    } catch(err) { 
+                        showToast("Gagal membaca file JSON!", "error"); 
+                    }
+                };
+                reader.readAsText(file);
+                
+                // Reset value agar bisa import file yang sama lagi jika perlu
+                e.target.value = '';
+            });
+        }
+
+        function showToast(msg, type = "success") {
+            const t = document.getElementById('toast'); const icon = t.querySelector('i');
+            document.getElementById('toastMsg').innerText = msg;
+            if (type === 'error') { icon.setAttribute('data-lucide', 'alert-circle'); icon.style.color = 'var(--danger)'; } 
+            else { icon.setAttribute('data-lucide', 'check-circle'); icon.style.color = 'var(--success)'; }
+            lucide.createIcons(); t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
